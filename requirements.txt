@@ -6,5 +6,9 @@ langchain_core
 langchain_google_genai
 langchain_community
 langchain_chroma
+langchain-text-splitters
 pypdf
-dotenv
+python-dotenv
+python-multipart
+pytest
+httpx

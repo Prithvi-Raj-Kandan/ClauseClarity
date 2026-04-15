@@ -201,6 +201,14 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
+# ClauseClarify local data artifacts
+backend/data/
+backend/chroma_stores/
+
+# ClauseClarify local sample/testing assets
+residential-rental-agreement-format.pdf
+test-agreements/
+
 # Marimo
 marimo/_static/
 marimo/_lsp/

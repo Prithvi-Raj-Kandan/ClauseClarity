@@ -4,3 +4,9 @@ pydantic
 langchain
 langchain_core
 langchain_google_genai
+langchain_community
+langchain_chroma
+langchain-text-splitters
+pypdf
+python-dotenv
+python-multipart

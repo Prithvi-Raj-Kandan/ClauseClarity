@@ -44,6 +44,29 @@ RENTAL_AGREEMENT_SCHEMA = {
     }
 }
 
+HIGH_RISK_PATTERNS = {
+    "immediate_eviction": {
+        "regex": r"(immediate eviction|terminate\s+this\s+lease\s+immediately\s+without\s+any\s+notice)",
+        "reason": "Immediate eviction or termination without notice.",
+    },
+    "waiver_of_legal_rights": {
+        "regex": r"(not\s+to\s+approach\s+any\s+(court|police|legal\s+authority)|surrenders\s+all\s+legal\s+rights|has\s+no\s+right\s+to\s+contest)",
+        "reason": "Tenant legal remedies are waived or blocked.",
+    },
+    "unrestricted_landlord_entry": {
+        "regex": r"(enter\s+the\s+premises\s+at\s+any\s+time\s+of\s+day\s+or\s+night\s+without\s+any\s+notice)",
+        "reason": "Landlord entry rights are unrestricted and no-notice.",
+    },
+    "unbounded_penalties": {
+        "regex": r"(penalty\s+of\s+INR\s+[\d,]+\s+per\s+day\s+with\s+no\s+limit)",
+        "reason": "Penalty terms are unbounded or excessive.",
+    },
+    "deposit_non_refundable": {
+        "regex": r"(no\s+refund\s+is\s+guaranteed|deduct\s+any\s+amount\s+at\s+his\s+sole\s+discretion)",
+        "reason": "Security deposit refund terms are unfair or discretionary.",
+    },
+}
+
 # Example of how the bot would flag a document
 def analyze_agreement(text):
     missing_elements = []
@@ -51,3 +74,41 @@ def analyze_agreement(text):
         if not re.search(details['regex'], text, re.IGNORECASE):
             missing_elements.append(category)
     return missing_elements
+
+
+def analyze_agreement_detailed(text):
+    """Return per-category matches, missing clauses, and critical guidance."""
+    results = {}
+    missing_elements = []
+    for category, details in RENTAL_AGREEMENT_SCHEMA.items():
+        found = bool(re.search(details["regex"], text, re.IGNORECASE))
+        results[category] = {
+            "found": found,
+            "importance": details["importance"],
+            "critical_check": details["critical_check"],
+        }
+        if not found:
+            missing_elements.append(category)
+
+    critical_missing = [
+        category
+        for category in missing_elements
+        if RENTAL_AGREEMENT_SCHEMA[category]["importance"] <= 3
+    ]
+
+    high_risk_flags = []
+    for flag_name, flag in HIGH_RISK_PATTERNS.items():
+        if re.search(flag["regex"], text, re.IGNORECASE):
+            high_risk_flags.append(
+                {
+                    "flag": flag_name,
+                    "reason": flag["reason"],
+                }
+            )
+
+    return {
+        "missing_categories": missing_elements,
+        "critical_missing": critical_missing,
+        "categories": results,
+        "high_risk_flags": high_risk_flags,
+    }
