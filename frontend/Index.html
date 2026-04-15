@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Agreement AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="main-container">
+
+    <!-- LEFT: CHAT -->
+    <div class="chat-container">
+        <div class="chat-header">Chat Assistant</div>
+
+        <div class="chat-box" id="chatBox">
+            <div class="message bot">Upload a rental agreement or ask a question.</div>
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Type your message...">
+
+            <!-- Upload Button -->
+            <input type="file" id="fileInput" hidden>
+            <button onclick="document.getElementById('fileInput').click()">📎</button>
+
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- RIGHT: ANALYSIS PANEL -->
+    <div class="analysis-container">
+        <div class="analysis-header">AI Analysis</div>
+
+        <div class="analysis-box" id="analysisBox">
+            <p>No analysis yet. Upload a document or ask something.</p>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
